@@ -1,0 +1,21 @@
+{
+  "name": "scrum-poker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:Tim-and-Co/scrum-poker.git",
+  "author": "Tim Robillard <robillt@algonquincollege.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "apps/**",
+    "pacakages/**"
+  ],
+  "scripts": {
+    "dev:client": "yarn --cwd apps/client start",
+    "dev:server": "yarn --cwd apps/server dev",
+    "dev": "npm-run-all --parallel dev:client dev:server"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}
