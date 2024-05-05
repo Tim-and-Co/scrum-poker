@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createServerClient } from "@/utils/supabase/server";
 
 import { SubmitButton } from "./submit-button";
+import GHButton from "./gh-button";
 
 export default function Login({
   searchParams,
@@ -116,6 +117,7 @@ export default function Login({
           </p>
         )}
       </form>
+      <GHButton /> // TODO add style
     </div>
   );
 }
