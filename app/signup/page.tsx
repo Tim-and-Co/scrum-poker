@@ -5,30 +5,39 @@ import { redirect } from "next/navigation";
 import { createServerClient } from "@/utils/supabase/server";
 
 import { SubmitButton } from "../../components/submit-button";
-import GHButton from "./gh-button";
+import GHButton from "../login/gh-button";
 
-export default function Login({
+export default function Signup({
   searchParams,
 }: {
   searchParams: { message: string };
 }) {
-  const signIn = async (formData: FormData) => {
+  const signUp = async (formData: FormData) => {
     "use server";
 
+    const origin = headers().get("origin");
+    const user_name = formData.get("user_name") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     const supabase = createServerClient();
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: `${origin}/auth/callback`,
+        data: {
+          user_name,
+          avatar_url: "",
+        },
+      },
     });
 
     if (error) {
-      return redirect("/login?message=Could not authenticate user");
+      return redirect("/signup?message=Could not authenticate user");
     }
 
-    return redirect("/protected");
+    return redirect("/signup?message=Check email to continue sign in process");
   };
 
   return (
@@ -54,6 +63,15 @@ export default function Login({
         Back
       </Link>
       <form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
+        <label className="text-md" htmlFor="user_name">
+          Username
+        </label>
+        <input
+          className="rounded-md px-4 py-2 bg-inherit border mb-6"
+          name="user_name"
+          placeholder="john"
+          required
+        />
         <label className="text-md" htmlFor="email">
           Email
         </label>
@@ -74,24 +92,24 @@ export default function Login({
           required
         />
         <SubmitButton
-          formAction={signIn}
+          formAction={signUp}
           className="bg-green-700 rounded-md px-4 py-2 text-foreground mb-2"
-          pendingText="Signing In..."
+          pendingText="Signing Up..."
         >
-          Sign In
+          Sign Up
         </SubmitButton>
         {searchParams?.message && (
           <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
             {searchParams.message}
           </p>
         )}
-        <p className="text-center">Don't have an account?</p>
+        <p className="text-center">Have an account?</p>
         <p className="text-center">
           Click{" "}
-          <Link href="/signup" className="text-blue-500">
+          <Link href="/login" className="text-blue-500">
             here
           </Link>{" "}
-          to sign up
+          to log in
         </p>
       </form>
       <GHButton /> {/* TODO add style */}

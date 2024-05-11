@@ -1,5 +1,7 @@
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
+import { createServerClient } from "@/utils/supabase/server";
+import InitUser from "@/components/InitUser";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -11,11 +13,16 @@ export const metadata = {
   description: "The fastest way to build apps with Next.js and Supabase",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  "use server";
+
+  const supabase = createServerClient();
+  const { data } = await supabase.auth.getSession();
+
   return (
     <html lang="en" className={GeistSans.className}>
       <body className="bg-background text-foreground">
@@ -23,6 +30,7 @@ export default function RootLayout({
           {children}
         </main>
       </body>
+      <InitUser user={data.session?.user} />
     </html>
   );
 }
