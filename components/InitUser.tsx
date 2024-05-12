@@ -12,6 +12,11 @@ export default function InitUser({ user }: { user: User | undefined }) {
     if (!initState.current) {
       useUser.setState({
         user: user ? toAuthUser(user) : undefined,
+        loaded: true,
+      });
+    } else {
+      useUser.setState({
+        loaded: true,
       });
     }
 

@@ -11,6 +11,7 @@ export type AuthUser = {
 
 type UserState = {
   user: AuthUser | undefined;
+  loaded: boolean;
 };
 
 export const toAuthUser = (user: User): AuthUser => ({
@@ -22,4 +23,5 @@ export const toAuthUser = (user: User): AuthUser => ({
 
 export const useUser = create<UserState>()(() => ({
   user: undefined,
+  loaded: false,
 }));
